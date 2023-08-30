@@ -1,11 +1,10 @@
-package au.org.scoutmaster.security;
+package au.org.scoutmaster.application;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 
 public class AccessDeniedView implements View
 {
-	private static final long serialVersionUID = 1L;
 
 	public AccessDeniedView(String featureName)
 	{

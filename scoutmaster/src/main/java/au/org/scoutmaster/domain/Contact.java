@@ -44,12 +44,11 @@ import org.joda.time.format.DateTimeParser;
 import au.com.vaadinutils.crud.CrudEntity;
 import au.org.scoutmaster.dao.ContactDao;
 import au.org.scoutmaster.dao.DaoFactory;
-import au.org.scoutmaster.dao.RelationshipDao;
 import au.org.scoutmaster.domain.validation.MemberChecks;
 
 @Entity(name = "Contact")
 @Multitenant
-@TenantDiscriminatorColumn(name = "ScoutGroup_ID")
+@TenantDiscriminatorColumn(name = "Group_ID")
 @Table(name = "Contact")
 @Access(AccessType.FIELD)
 @NamedQueries(
@@ -62,6 +61,7 @@ public class Contact extends BaseEntity implements Importable, CrudEntity
 
 	private static final long serialVersionUID = 1L;
 
+	@SuppressWarnings("unused")
 	static private Logger logger = LogManager.getLogger(Contact.class);
 
 	public static final String PRIMARY_PHONE = "primaryPhone";
@@ -291,12 +291,20 @@ public class Contact extends BaseEntity implements Importable, CrudEntity
 	 * e.g. Brett 'Parent Of' Tristan
 	 *
 	 * Brett is on the LHS of the relationship
-	 *
-	 * The contact Tristan will have a reciprocal relationship of Tristan 'Child
-	 * Of' Brett
 	 */
 	@OneToMany(mappedBy = "lhs", targetEntity = Relationship.class, orphanRemoval = true)
 	private Set<Relationship> lhsrelationships = new HashSet<>();
+
+	/**
+	 * Contacts this contact is related to on the Right Hand Side (RHS) of the
+	 * relationship type.
+	 *
+	 * e.g. Brett 'Parent Of' Tristan
+	 *
+	 * Tristan is on the RHS of the relationship
+	 */
+	@OneToMany(mappedBy = "rhs", targetEntity = Relationship.class, orphanRemoval = true)
+	private Set<Relationship> rhsrelationships = new HashSet<>();
 
 	/**
 	 * List of tags used to describe this Contact.
@@ -973,46 +981,4 @@ public class Contact extends BaseEntity implements Importable, CrudEntity
 			email = this.homeEmail;
 		return email;
 	}
-
-	public void addRelationship(Relationship child)
-	{
-		this.lhsrelationships.add(child);
-	}
-
-	public void removeRecipricolRelationship(Relationship relationship)
-	{
-		boolean found = false;
-		// Find and remove the reciprocal relationship
-		RelationshipType recipricolType = relationship.getReciprocalType();
-		for (Relationship recipricol : this.lhsrelationships)
-		{
-			if (recipricol.getType().equals(recipricolType) && recipricol.rhs.equals(relationship.lhs))
-			{
-				this.lhsrelationships.remove(recipricol);
-				found = true;
-				break;
-			}
-		}
-
-		if (found != true)
-			logger.warn("Failed to find recpricol relationship for {} ", relationship);
-	}
-
-	public void addRecipricolRelationship(Relationship relationship)
-	{
-		// First check that it doesn't already exist.
-		RelationshipDao daoRelationship = new DaoFactory().getRelationshipDao();
-
-		Relationship reciprocalRelationship = daoRelationship.find(relationship.getRHS(),
-				relationship.getReciprocalType(), relationship.getLHS());
-
-		if (reciprocalRelationship == null)
-		{
-			reciprocalRelationship = new Relationship(relationship.getRHS(), relationship.getReciprocalType(),
-					relationship.getLHS());
-			daoRelationship.persist(reciprocalRelationship);
-			this.lhsrelationships.add(reciprocalRelationship);
-		}
-	}
-
 }

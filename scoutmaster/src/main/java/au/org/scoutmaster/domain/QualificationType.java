@@ -16,7 +16,7 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Entity(name = "QualificationType")
 @Multitenant
-@TenantDiscriminatorColumn(name = "ScoutGroup_ID")
+@TenantDiscriminatorColumn(name = "Group_ID")
 @Table(name = "QualificationType")
 @Access(AccessType.FIELD)
 public class QualificationType extends BaseEntity

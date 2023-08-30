@@ -1,5 +1,3 @@
-
-<!DOCTYPE project>
 <module>
 	<!-- This file is automatically updated based on new dependencies by the 
 		goal "vaadin:update-widgetset". -->
@@ -47,16 +45,42 @@
 
     <inherits name="org.vaadin.easyuploads.Widgetset" />
 
-    <inherits name="org.vaadin.aceeditor.AceEditorWidgetSet" />
+    
 
-    <inherits name="org.vaadin.tokenfield.TokenfieldWidgetset" />
+    
     
     <inherits name="org.vaadin.peter.buttongroup.ButtonGroupWidgetset" />
     
-    <inherits name="org.vaadin.johan.Toolbox7Widgetset" />
-
-    <inherits name="org.vaadin.peter.contextmenu.ContextmenuWidgetset"/>
     
 
-    <inherits name="org.vaadin.ui.LegacycomboboxWidgetset" />
+    
+    
+
+    
+
+    
+
+    
+
+    
+
+    <inherits name="org.vaadin.tokenfield.TokenfieldWidgetset" />
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <inherits name="org.vaadin.aceeditor.AceEditorWidgetSet" />
+
+    <inherits name="org.vaadin.johan.Toolbox7Widgetset" />
+
+    <inherits name="org.vaadin.peter.contextmenu.ContextmenuWidgetset" />
 </module>

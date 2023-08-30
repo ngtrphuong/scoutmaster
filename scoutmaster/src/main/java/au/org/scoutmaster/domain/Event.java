@@ -35,7 +35,7 @@ import au.com.vaadinutils.crud.CrudEntity;
 
 @Entity(name = "Event")
 @Multitenant
-@TenantDiscriminatorColumn(name = "ScoutGroup_ID")
+@TenantDiscriminatorColumn(name = "Group_ID")
 @Table(name = "Event")
 @Access(AccessType.FIELD)
 @NamedQueries(

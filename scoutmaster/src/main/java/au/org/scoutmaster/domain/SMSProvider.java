@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 @Entity(name = "SMSProvider")
 @Multitenant
-@TenantDiscriminatorColumn(name = "ScoutGroup_ID")
+@TenantDiscriminatorColumn(name = "Group_ID")
 @Table(name = "SMSProvider")
 @Access(AccessType.FIELD)
 @NamedQueries(

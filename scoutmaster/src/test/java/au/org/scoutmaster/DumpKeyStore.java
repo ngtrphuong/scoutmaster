@@ -38,13 +38,13 @@ public class DumpKeyStore
 
 			// Get the set of trust anchors, which contain the most-trusted CA
 			// certificates
-			Iterator<TrustAnchor> it = params.getTrustAnchors().iterator();
+			Iterator it = params.getTrustAnchors().iterator();
 
 			ArrayList<String> certs = new ArrayList<>();
 			int count = 0;
 			while (it.hasNext())
 			{
-				TrustAnchor ta = it.next();
+				TrustAnchor ta = (TrustAnchor) it.next();
 				// Get certificate
 				java.security.cert.X509Certificate cert = ta.getTrustedCert();
 				certs.add(cert.getSubjectDN().getName());

@@ -6,7 +6,7 @@ import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="Dali", date="2017-08-07T17:08:00.073+1000")
+@Generated(value="Dali", date="2015-11-24T19:08:01.031+1100")
 @StaticMetamodel(Task.class)
 public class Task_ extends BaseEntity_ {
 	public static volatile SingularAttribute<Task, TaskType> taskType;

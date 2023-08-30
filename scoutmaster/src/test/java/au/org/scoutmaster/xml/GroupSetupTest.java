@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import au.org.scoutmaster.domain.ScoutGroupType;
+import au.org.scoutmaster.domain.GroupType;
 
 public class GroupSetupTest
 {
@@ -15,7 +15,7 @@ public class GroupSetupTest
 	{
 		try
 		{
-			GroupSetup.load(ScoutGroupType.Scouts, "Australia");
+			GroupSetup.load(GroupType.Scouts, "Australia");
 		}
 		catch (IOException | SAXException e)
 		{

@@ -20,6 +20,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -63,6 +64,8 @@ public class SchoolView extends BaseCrudView<School> implements View, Selected<S
 	private static Logger logger = LogManager.getLogger();
 
 	public static final String NAME = "School";
+
+	private Tab youthTab;
 
 	TabSheet tabs = new TabSheet();
 
@@ -183,9 +186,10 @@ public class SchoolView extends BaseCrudView<School> implements View, Selected<S
 		overviewForm.newLine();
 
 		/** Address **/
-		overviewForm.bindTextField("Street", new Path(School_.primaryAddress, Address_.street).getName());
+		TextField street = overviewForm.bindTextField("Street",
+				new Path(School_.primaryAddress, Address_.street).getName());
 		overviewForm.newLine();
-		overviewForm.bindTextField("City", new Path(School_.primaryAddress, Address_.city).getName());
+		TextField city = overviewForm.bindTextField("City", new Path(School_.primaryAddress, Address_.city).getName());
 		overviewForm.newLine();
 		overviewForm.bindTextField("State", new Path(School_.primaryAddress, Address_.state).getName());
 		overviewForm.newLine();
@@ -240,8 +244,8 @@ public class SchoolView extends BaseCrudView<School> implements View, Selected<S
 		{
 			// Long groupRoleId = (Long) this.role.getValue();
 
-			// @SuppressWarnings("rawtypes")
-			// final Property source = event.getProperty();
+			@SuppressWarnings("rawtypes")
+			final Property source = event.getProperty();
 
 		}
 

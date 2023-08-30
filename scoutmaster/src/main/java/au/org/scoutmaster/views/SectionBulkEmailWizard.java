@@ -113,9 +113,9 @@ public class SectionBulkEmailWizard extends WizardView<SectionType, Contact, Con
 	}
 
 	@Override
-	public HeadingPropertySet getVisibleSelectColumns()
+	public HeadingPropertySet<Contact> getVisibleSelectColumns()
 	{
-		final Builder<Contact> builder = new HeadingPropertySet.Builder<>();
+		final Builder<Contact> builder = new HeadingPropertySet.Builder<Contact>();
 		builder.addColumn("Firstname", Contact_.firstname).addColumn("Lastname", Contact_.lastname)
 				.addColumn("Birth Date", Contact_.birthDate);
 
@@ -170,7 +170,7 @@ public class SectionBulkEmailWizard extends WizardView<SectionType, Contact, Con
 			{
 				ReportFilterUIBuilder builder = new ReportFilterUIBuilder();
 
-				ReportParameterConstant<String> param = new ReportParameterConstant<>("ScoutGroup_ID",
+				ReportParameterConstant<String> param = new ReportParameterConstant<String>("group_id",
 						"" + SMSession.INSTANCE.getGroup().getId());
 				builder.getReportParameters().add(param);
 
@@ -194,12 +194,13 @@ public class SectionBulkEmailWizard extends WizardView<SectionType, Contact, Con
 			this.dateField = new DateField("Unpublished Date");
 			formLayout.addComponent(this.dateField);
 
-			this.sectionField = new EntityComboBox<>("Section", getParentContainer(), getParentDisplayProperty());
+			this.sectionField = new EntityComboBox<SectionType>("Section", getParentContainer(),
+					getParentDisplayProperty());
 			this.sectionField.setWidth("300");
 			formLayout.addComponent(this.sectionField);
 
-			this.contactField = new DependantComboBox<>("Contact", this.sectionField, getChildContainer(),
-					getChildForeignAttribute(), getChildDisplayProperty());
+			this.contactField = new DependantComboBox<SectionType, Contact>("Contact", this.sectionField,
+					getChildContainer(), getChildForeignAttribute(), getChildDisplayProperty());
 			this.contactField.setWidth("300");
 			formLayout.addComponent(this.contactField);
 
@@ -338,5 +339,4 @@ public class SectionBulkEmailWizard extends WizardView<SectionType, Contact, Con
 
 		return valid;
 	}
-
 }

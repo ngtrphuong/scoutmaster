@@ -26,7 +26,7 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Entity(name = "School")
 @Multitenant
-@TenantDiscriminatorColumn(name = "ScoutGroup_ID")
+@TenantDiscriminatorColumn(name = "Group_ID")
 @Table(name = "School")
 @Access(AccessType.FIELD)
 
@@ -129,11 +129,6 @@ public class School extends BaseEntity
 	public String getAdvertisingEmail()
 	{
 		return (advertisingContact != null ? advertisingContact.getEmail() : null);
-	}
-
-	public SchoolType getSchoolType()
-	{
-		return schoolType;
 	}
 
 }

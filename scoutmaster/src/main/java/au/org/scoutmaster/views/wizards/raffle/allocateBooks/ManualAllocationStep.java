@@ -216,7 +216,7 @@ public class ManualAllocationStep implements WizardStep, ClickListener, Allocati
 			{
 				ReportFilterUIBuilder builder = new ReportFilterUIBuilder();
 
-				ReportParameterConstant<String> param = new ReportParameterConstant<String>("ScoutGroup_ID",
+				ReportParameterConstant<String> param = new ReportParameterConstant<String>("group_id",
 						"" + SMSession.INSTANCE.getGroup().getId());
 				builder.getReportParameters().add(param);
 

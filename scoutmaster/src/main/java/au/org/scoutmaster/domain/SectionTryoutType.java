@@ -24,7 +24,7 @@ import org.joda.money.Money;
  */
 @Entity(name = "SectionTryoutType")
 @Multitenant
-@TenantDiscriminatorColumn(name = "ScoutGroup_ID")
+@TenantDiscriminatorColumn(name = "Group_ID")
 @Table(name = "SectionTryoutType")
 @Access(AccessType.FIELD)
 public class SectionTryoutType extends BaseEntity

@@ -26,7 +26,7 @@ import au.com.vaadinutils.dao.JpaEntityHelper;
 
 @Entity
 @Multitenant
-@TenantDiscriminatorColumn(name = "ScoutGroup_ID")
+@TenantDiscriminatorColumn(name = "Group_ID")
 @Table(name = "Note")
 @Access(AccessType.FIELD)
 @NamedQueries(

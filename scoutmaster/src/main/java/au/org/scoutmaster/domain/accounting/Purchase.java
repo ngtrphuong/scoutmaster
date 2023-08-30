@@ -22,7 +22,7 @@ import au.org.scoutmaster.domain.Organisation;
 
 @Entity
 @Multitenant
-@TenantDiscriminatorColumn(name = "ScoutGroup_ID")
+@TenantDiscriminatorColumn(name = "Group_ID")
 @Table(name = "Purchase")
 @Access(AccessType.FIELD)
 public class Purchase extends BaseEntity

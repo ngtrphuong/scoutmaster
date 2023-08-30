@@ -40,10 +40,10 @@ public class SearchableContactTable extends VerticalLayout
 	private boolean excludeDoNotSendBulkCommunications;
 
 	public SearchableContactTable(final JPAContainer<Contact> contactContainer,
-			final HeadingPropertySet headingPropertySet)
+			final HeadingPropertySet<Contact> headingPropertySet)
 	{
 		this.contactContainer = contactContainer;
-		this.contactTable = new EntityTable<>(contactContainer, headingPropertySet);
+		this.contactTable = new EntityTable<Contact>(contactContainer, headingPropertySet);
 		init();
 	}
 

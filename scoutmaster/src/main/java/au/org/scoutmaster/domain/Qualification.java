@@ -19,7 +19,7 @@ import org.eclipse.persistence.annotations.TenantDiscriminatorColumn;
  */
 @Entity(name = "Qualification")
 @Multitenant
-@TenantDiscriminatorColumn(name = "ScoutGroup_ID")
+@TenantDiscriminatorColumn(name = "Group_ID")
 @Table(name = "Qualification")
 @Access(AccessType.FIELD)
 public class Qualification extends BaseEntity

@@ -31,7 +31,7 @@ import au.org.scoutmaster.domain.access.User;
  */
 @Entity
 @Multitenant
-@TenantDiscriminatorColumn(name = "ScoutGroup_ID")
+@TenantDiscriminatorColumn(name = "Group_ID")
 @Table(name = "CommunicationLog")
 @Access(AccessType.FIELD)
 @NamedQueries(

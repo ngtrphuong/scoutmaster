@@ -28,7 +28,7 @@ import au.org.scoutmaster.domain.access.User;
 
 @Entity(name = "ForgottenPasswordReset")
 @Multitenant
-@TenantDiscriminatorColumn(name = "ScoutGroup_ID")
+@TenantDiscriminatorColumn(name = "Group_ID")
 @Table(name = "ForgottenPasswordReset")
 @Access(AccessType.FIELD)
 @NamedQueries(

@@ -38,7 +38,7 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 @Entity(name = "Organisation")
 @Multitenant
-@TenantDiscriminatorColumn(name = "ScoutGroup_ID")
+@TenantDiscriminatorColumn(name = "Group_ID")
 @Table(name = "Organisation")
 @Access(AccessType.FIELD)
 @NamedQueries(

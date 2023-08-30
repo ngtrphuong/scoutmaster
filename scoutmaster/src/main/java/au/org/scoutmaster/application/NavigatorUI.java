@@ -17,16 +17,11 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.ValoTheme;
 
-import au.com.vaadinutils.crud.CrudSecurityManager;
-import au.com.vaadinutils.crud.security.SecurityManagerFactoryProxy;
 import au.com.vaadinutils.errorHandling.ErrorSettingsFactory;
 import au.com.vaadinutils.errorHandling.ErrorWindow;
 import au.com.vaadinutils.help.HelpIndexFactory;
@@ -35,9 +30,6 @@ import au.com.vaadinutils.util.DeadlockFinder;
 import au.org.scoutmaster.domain.converter.ScoutmasterConverterFactory;
 import au.org.scoutmaster.help.HelpIndexImpl;
 import au.org.scoutmaster.help.HelpWrappingViewProvider;
-import au.org.scoutmaster.security.AccessDeniedView;
-import au.org.scoutmaster.security.SecurityFactoryImpl;
-import au.org.scoutmaster.security.SecurityManagerImpl;
 import au.org.scoutmaster.views.ContactView;
 import au.org.scoutmaster.views.ForgottenPasswordView;
 import au.org.scoutmaster.views.HomeView;
@@ -81,39 +73,21 @@ public class NavigatorUI extends UI
 	{
 		storeUrlFragment();
 
-		final VerticalLayout viewContainer = new VerticalLayout();
-		viewContainer.setHeight("100%");
-		this.mainLayout = new VerticalLayout();
-		this.mainLayout.setMargin(false);
-		this.mainLayout.setSpacing(true);
-		this.mainLayout.setSizeFull();
-		this.mainLayout.addComponent(viewContainer);
-		this.mainLayout.setExpandRatio(viewContainer, 1.0f);
-
-		setContent(this.mainLayout);
-
 		if (!configured)
 		{
-			try
-			{
-				DeadlockFinder.SINGLETON.start();
+			DeadlockFinder.SINGLETON.start();
 
-				ErrorSettingsFactory.setErrorSettings(new ErrorString(this));
+			// SecurityFactoryImpl.defaultSecurityManager = new
+			// AllowAllSecurityManager();
 
-				HelpIndexFactory.registerHelpIndex(new HelpIndexImpl());
+			ErrorSettingsFactory.setErrorSettings(new ErrorString(this));
 
-				this.getReconnectDialogConfiguration()
-						.setDialogText("You may have a problem with your Internet connection. Trying to reconnect...");
+			HelpIndexFactory.registerHelpIndex(new HelpIndexImpl());
 
-				iinitialiseSecurityManager();
+			this.getReconnectDialogConfiguration().setDialogText(
+					"You may have a problem with your Internet connection. Server connection lost, trying to reconnect...");
 
-				configured = true;
-			}
-			catch (ConfigurationException e)
-			{
-				viewContainer.addComponent(new Label(e.getMessage()));
-				return;
-			}
+			configured = true;
 		}
 
 		new ErrorWindow();
@@ -121,7 +95,19 @@ public class NavigatorUI extends UI
 		VaadinSession.getCurrent().setConverterFactory(new ScoutmasterConverterFactory());
 		styleConfirmDialog();
 
+		this.mainLayout = new VerticalLayout();
+		this.mainLayout.setMargin(false);
+		this.mainLayout.setSpacing(true);
+		this.mainLayout.setSizeFull();
+
+		final VerticalLayout viewContainer = new VerticalLayout();
+		viewContainer.setHeight("100%");
+
+		// final Navigator navigator = new Navigator(this, viewContainer);
+
 		final Navigator navigator = new CustomNavigator(this, viewContainer, "");
+
+		// navigator.addView("", ScoutmasterViewEnum.getDefaultView());
 
 		// create our custom provider which will wrap all views in a
 		// helpSplitPannel
@@ -129,99 +115,57 @@ public class NavigatorUI extends UI
 		navigator.addProvider(provider);
 
 		//
+		// // Wire up the navigation
+		// for (final ViewMapping viewmap : this.viewMap)
+		// {
+		// navigator.addView(viewmap.getViewName(), viewmap.getView());
+		// }
+
+		this.mainLayout.addComponent(viewContainer);
+		this.mainLayout.setExpandRatio(viewContainer, 1.0f);
+
+		setContent(this.mainLayout);
+
+		//
 		// We use a view change handler to ensure the user is always redirected
 		// to the login view if the user is not logged in.
 		//
-		getNavigator().addViewChangeListener(new SMViewChangeListener(navigator));
-
-	}
-
-	/**
-	 * Check that every view has had security permissions applied and that the
-	 * database reflects the annotations in the current code base. Feature
-	 * permissions can be added/deleted or updated and the db must be brought
-	 * into sync.
-	 *
-	 * @throws ConfigurationException
-	 */
-	private void iinitialiseSecurityManager() throws ConfigurationException
-	{
-		SecurityManagerFactoryProxy.setFactory(new SecurityFactoryImpl());
-
-		for (ScoutmasterViewEnum page : ScoutmasterViewEnum.values())
+		getNavigator().addViewChangeListener(new ViewChangeListener()
 		{
-			if (!isSecurityManagerValid(page))
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean beforeViewChange(final ViewChangeEvent event)
 			{
-				final String message = "<h1>Security Features have not been added to '" + page.getViewClass()
-						+ "'. Please add the Security Annotation (@Feature) and rebuild the project.</h1>";
-				final Label label = new Label(message, ContentMode.HTML);
-				label.setStyleName(ValoTheme.LABEL_FAILURE);
-				this.setContent(label);
-				logger.error(
-						"Security Features have not been aded to {}. Please add the Security Annotations (@Feature) and rebuild the project.",
-						page.getViewClass());
-				throw new ConfigurationException(message);
-			}
-		}
 
-	}
+				// Check if a user has logged in
+				final boolean isLoggedIn = getSession().getAttribute("user") != null;
+				final boolean isLoginView = event.getNewView() instanceof LoginView;
+				final boolean isHomeView = event.getNewView() instanceof HomeView;
+				final boolean isForgottenPasswordView = event.getNewView() instanceof ForgottenPasswordView;
+				final boolean isResetPasswordView = event.getNewView() instanceof ResetPasswordView;
+				final boolean isSetupWizard = event.getNewView() instanceof GroupSetupWizardView;
 
-	private boolean isSecurityManagerValid(ScoutmasterViewEnum page)
-	{
-		CrudSecurityManager viewSecurityManager = SecurityManagerFactoryProxy.getSecurityManager(page.getViewClass());
-		if (!(viewSecurityManager instanceof SecurityManagerImpl))
-		{
-			logger.error("Class without a security manager: " + page.getViewClass().getCanonicalName());
-			return false;
-		}
+				// TODO: should we cache this?
+				// during dev its easier if we don't.
 
-		return true;
-	}
-
-	private final class SMViewChangeListener implements ViewChangeListener
-	{
-		private final Navigator navigator;
-		private static final long serialVersionUID = 1L;
-
-		private SMViewChangeListener(Navigator navigator)
-		{
-			this.navigator = navigator;
-		}
-
-		@Override
-		public boolean beforeViewChange(final ViewChangeEvent event)
-		{
-
-			// Check if a user has logged in
-			final boolean isLoggedIn = getSession().getAttribute("user") != null;
-			View newView = event.getNewView();
-			final boolean isAccessDenied = newView instanceof AccessDeniedView;
-			final boolean isLoginView = newView instanceof LoginView;
-			final boolean isHomeView = newView instanceof HomeView;
-			final boolean isForgottenPasswordView = newView instanceof ForgottenPasswordView;
-			final boolean isResetPasswordView = newView instanceof ResetPasswordView;
-			final boolean isSetupWizard = newView instanceof GroupSetupWizardView;
-
-			if (isLoggedIn)
-			{
-				if (isLoginView || isForgottenPasswordView || isResetPasswordView)
+				if (isLoggedIn)
 				{
-					// If someone tries to access to login related pages
-					// whilst logged in. Reject them.
-					// then cancel
-					return false;
-				}
-				else
-				{
-					if (!isAccessDenied)
+					if (isLoginView || isForgottenPasswordView || isResetPasswordView)
 					{
-						// check if the menu bar has been added and if not
-						// then
+						// If someone tries to access to login related pages
+						// whilst logged in. Reject them.
+						// then cancel
+						return false;
+					}
+					else
+					{
+						// check if the menu bar has been added and if not then
 						// add
 						// it.
 						if (NavigatorUI.this.menubar == null)
 						{
-							NavigatorUI.this.menubar = new MenuBuilder(this.navigator, ScoutmasterViewEnum.getViewMap())
+							NavigatorUI.this.menubar = new MenuBuilder(navigator, ScoutmasterViewEnum.getViewMap())
 									.build();
 							NavigatorUI.this.menubar.setWidth("100%");
 							NavigatorUI.this.mainLayout.addComponentAsFirst(NavigatorUI.this.menubar);
@@ -230,47 +174,47 @@ public class NavigatorUI extends UI
 						// Reset the sizing as HomeView may have made it
 						// undefined.
 						NavigatorUI.this.mainLayout.setSizeFull();
+						return true;
 					}
-					return true;
-
-				}
-			}
-			else
-			{
-				// We arn't currently logged in.
-				if (isHomeView)
-				{
-					// HomeView needs scroll bars so set size undefined.
-					NavigatorUI.this.mainLayout.setSizeUndefined();
-					return true;
-				}
-				else if (isLoginView || isForgottenPasswordView || isResetPasswordView || isSetupWizard)
-				{
-					// Reset the sizing as HomeView may have made it
-					// undefined.
-					NavigatorUI.this.mainLayout.setSizeFull();
-					return true;
 				}
 				else
 				{
-					// not logged in, don't know where they are going to so
-					// send them home.
-					getNavigator().navigateTo(HomeView.NAME);
-					return false;
+					// We arn't currently logged in.
+					if (isHomeView)
+					{
+						// HomeView needs scroll bars so set size undefined.
+						NavigatorUI.this.mainLayout.setSizeUndefined();
+						return true;
+					}
+					else if (isLoginView || isForgottenPasswordView || isResetPasswordView || isSetupWizard)
+					{
+						// Reset the sizing as HomeView may have made it
+						// undefined.
+						NavigatorUI.this.mainLayout.setSizeFull();
+						return true;
+					}
+					else
+					{
+						// not logged in, don't know where they are going to so
+						// send them home.
+						getNavigator().navigateTo(HomeView.NAME);
+						return false;
+					}
 				}
+
 			}
 
-		}
+			@Override
+			public void afterViewChange(final ViewChangeEvent event)
+			{
+				// For some reason the page title is set to null after each
+				// navigation transition.
+				getPage().setTitle("Scoutmaster");
+				currentView = event.getNewView();
+			}
 
-		@Override
-		public void afterViewChange(final ViewChangeEvent event)
-		{
-			// For some reason the page title is set to null after each
+		});
 
-			// navigation transition.
-			getPage().setTitle("Scoutmaster");
-			currentView = event.getNewView();
-		}
 	}
 
 	public class CustomNavigator extends Navigator

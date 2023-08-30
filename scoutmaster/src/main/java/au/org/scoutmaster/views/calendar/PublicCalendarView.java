@@ -1,10 +1,9 @@
-package au.org.scoutmaster.views.publicui;
+package au.org.scoutmaster.views.calendar;
 
 import au.com.vaadinutils.menu.Menu;
-import au.org.scoutmaster.views.calendar.CalendarView;
 
 /** A start view for navigating to the main view */
-@Menu(display = "Public View", path = "Public")
+@Menu(display = "Public View", path = "Calendar")
 public class PublicCalendarView extends CalendarView
 {
 	public static final String NAME = "PublicCalendar";

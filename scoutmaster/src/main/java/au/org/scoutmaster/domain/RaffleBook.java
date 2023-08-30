@@ -30,7 +30,7 @@ import au.org.scoutmaster.domain.accounting.Money;
  */
 @Entity(name = "RaffleBook")
 @Multitenant
-@TenantDiscriminatorColumn(name = "ScoutGroup_ID")
+@TenantDiscriminatorColumn(name = "Group_ID")
 @Table(name = "RaffleBook")
 @Access(AccessType.FIELD)
 @NamedQueries(

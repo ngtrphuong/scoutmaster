@@ -16,10 +16,10 @@ import au.com.vaadinutils.crud.ValidatingFieldGroup;
 import au.com.vaadinutils.ui.SingleEntityWizardStep;
 import au.org.scoutmaster.application.SMSession;
 import au.org.scoutmaster.dao.DaoFactory;
-import au.org.scoutmaster.domain.ScoutGroup;
-import au.org.scoutmaster.domain.ScoutGroup_;
+import au.org.scoutmaster.domain.Group;
+import au.org.scoutmaster.domain.Group_;
 
-public class GroupDetailStep extends SingleEntityWizardStep<ScoutGroup> implements WizardStep
+public class GroupDetailStep extends SingleEntityWizardStep<Group> implements WizardStep
 {
 	@SuppressWarnings("unused")
 	private static Logger logger = LogManager.getLogger(GroupDetailStep.class);
@@ -27,7 +27,7 @@ public class GroupDetailStep extends SingleEntityWizardStep<ScoutGroup> implemen
 
 	public GroupDetailStep(final GroupMaintenanceWizardView setupWizardView)
 	{
-		super(DaoFactory.getGenericDao(ScoutGroup.class), ScoutGroup.class);
+		super(DaoFactory.getGenericDao(Group.class), Group.class);
 	}
 
 	@Override
@@ -37,13 +37,13 @@ public class GroupDetailStep extends SingleEntityWizardStep<ScoutGroup> implemen
 	}
 
 	@Override
-	public Component getContent(final ValidatingFieldGroup<ScoutGroup> fieldGroup)
+	public Component getContent(final ValidatingFieldGroup<Group> fieldGroup)
 	{
 		if (layout == null)
 		{
 			layout = new VerticalLayout();
 			layout.setMargin(true);
-			final MultiColumnFormLayout<ScoutGroup> formLayout = new MultiColumnFormLayout<>(1, fieldGroup);
+			final MultiColumnFormLayout<Group> formLayout = new MultiColumnFormLayout<>(1, fieldGroup);
 			formLayout.setColumnFieldWidth(0, 250);
 			formLayout.setSizeFull();
 
@@ -54,12 +54,12 @@ public class GroupDetailStep extends SingleEntityWizardStep<ScoutGroup> implemen
 			layout.addComponent(formLayout);
 
 			final TextField groupName = formLayout.bindTextField("Group Name", "name");
-			formLayout.bindTextField("Phone No.", ScoutGroup_.phone1);
-			formLayout.bindTextField("Street", ScoutGroup_.street);
-			formLayout.bindTextField("City", ScoutGroup_.city);
-			formLayout.bindTextField("State", ScoutGroup_.state);
-			formLayout.bindTextField("Postcode", ScoutGroup_.postcode);
-			formLayout.bindTextField("Country", ScoutGroup_.country);
+			formLayout.bindTextField("Phone No.", Group_.phone1);
+			formLayout.bindTextField("Street", Group_.street);
+			formLayout.bindTextField("City", Group_.city);
+			formLayout.bindTextField("State", Group_.state);
+			formLayout.bindTextField("Postcode", Group_.postcode);
+			formLayout.bindTextField("Country", Group_.country);
 
 			groupName.addValidator(new StringLengthValidator("Group Name", 6, 255, false));
 		}
@@ -68,13 +68,13 @@ public class GroupDetailStep extends SingleEntityWizardStep<ScoutGroup> implemen
 	}
 
 	@Override
-	protected void initEntity(final ScoutGroup entity)
+	protected void initEntity(final Group entity)
 	{
 
 	}
 
 	@Override
-	protected ScoutGroup findEntity()
+	protected Group findEntity()
 	{
 		return SMSession.INSTANCE.getGroup();
 	}

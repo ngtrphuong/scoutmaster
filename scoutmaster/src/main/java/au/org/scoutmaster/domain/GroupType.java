@@ -1,12 +1,12 @@
 package au.org.scoutmaster.domain;
 
-public enum ScoutGroupType
+public enum GroupType
 {
 	Scouts("Scouts"), GirlGuides("Girl Guides");
 
 	private String printableName;
 
-	ScoutGroupType(String printableName)
+	GroupType(String printableName)
 	{
 		this.printableName = printableName;
 	}

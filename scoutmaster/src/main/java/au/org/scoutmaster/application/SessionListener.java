@@ -52,21 +52,13 @@ public class SessionListener implements HttpSessionListener
 
 				final JpaBaseDao<SessionHistory, Long> daoSession = new DaoFactory().getSessionHistoryDao();
 				final HttpSession session = arg0.getSession();
+				final User user = SMSession.INSTANCE.getLoggedInUser();
 
-				// prior to tomcat 8 we vaading doesn't have the actual session
-				// so we get null here.
-				if (session != null)
-				{
-					final User user = SMSession.INSTANCE.getLoggedInUser();
-
-					final SessionHistory sessionHistory = new SessionHistory();
-					sessionHistory.setUser(user);
-					sessionHistory.setEnd(new Date());
-					sessionHistory.setStart(new Date(session.getCreationTime()));
-					daoSession.persist(sessionHistory);
-				}
-				else
-					logger.warn("Session history not logged. Upgrade to tomcat 8 to enable session history tracking");
+				final SessionHistory sessionHistory = new SessionHistory();
+				sessionHistory.setUser(user);
+				sessionHistory.setEnd(new Date());
+				sessionHistory.setStart(new Date(session.getCreationTime()));
+				daoSession.persist(sessionHistory);
 				return null;
 
 			}

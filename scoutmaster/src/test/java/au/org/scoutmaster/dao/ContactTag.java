@@ -25,7 +25,8 @@ public class ContactTag
 		final EntityManager em = EntityManagerProvider.createEntityManager();
 		EntityManagerProvider.setCurrentEntityManager(em);
 
-		try (Transaction t = new Transaction(em))
+		final Transaction t = new Transaction(em);
+		try
 		{
 			// Tag the contact
 			final ContactDao daoContact = new DaoFactory().getContactDao();
