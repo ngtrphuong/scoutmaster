@@ -60,7 +60,7 @@ public class ContactSetConverter implements Converter<Set<? extends Object>, Set
 					throws com.vaadin.data.util.converter.Converter.ConversionException
 					{
 		Set<? extends Object> result = new HashSet<>();
-		if (targetType.getName().equals("java.util.Set"))
+		if ("java.util.Set".equals(targetType.getName()))
 		{
 			result = new HashSet<Contact>();
 

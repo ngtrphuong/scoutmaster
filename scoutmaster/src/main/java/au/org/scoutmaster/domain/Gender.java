@@ -14,24 +14,24 @@ public enum Gender
 		genderString = genderString.toLowerCase().trim();
 
 		// Male translations
-		if (genderString.equals("male")
+		if ("male".equals(genderString)
 				// because i do this all of the time.
-				|| genderString.equals("mail"))
+				|| "mail".equals(genderString))
 		{
 			gender = Male;
 		}
 		// female
 
-		else if (genderString.equals("female")
+		else if ("female".equals(genderString)
 				// because i do this all of the time.
 
-				|| genderString.equals("femail"))
+				|| "femail".equals(genderString))
 		{
 			gender = Female;
 		}
 
 		// transgender
-		else if (genderString.equals("NonBinary") || genderString.equals("Non Binary"))
+		else if ("NonBinary".equals(genderString) || "Non Binary".equals(genderString))
 		{
 			gender = Female;
 		}

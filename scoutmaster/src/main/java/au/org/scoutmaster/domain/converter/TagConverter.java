@@ -59,7 +59,7 @@ public class TagConverter implements Converter<Set<? extends Object>, Set<Tag>>
 					throws com.vaadin.data.util.converter.Converter.ConversionException
 					{
 		Set<? extends Object> result = new HashSet<>();
-		if (targetType.getName().equals("java.util.Set"))
+		if ("java.util.Set".equals(targetType.getName()))
 		{
 			result = new HashSet<Tag>();
 

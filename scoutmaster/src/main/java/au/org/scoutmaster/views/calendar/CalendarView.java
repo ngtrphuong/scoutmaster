@@ -90,7 +90,7 @@ public class CalendarView extends VerticalLayout
 					throw new IllegalArgumentException(
 							"The Group ID must be passed in the form of: https://www.scoutmaster.org.au/public#!PublicCalendar/group_id=1");
 
-				if (!msgs[0].equals("group_id"))
+				if (!"group_id".equals(msgs[0]))
 					throw new IllegalArgumentException(
 							"The Group ID must be passed in the form of: https://www.scoutmaster.org.au/public#!PublicCalendar/group_id=1");
 
