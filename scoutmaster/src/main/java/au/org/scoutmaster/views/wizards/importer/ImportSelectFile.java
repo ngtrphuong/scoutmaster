@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 
 import org.vaadin.teemu.wizards.WizardStep;
 
@@ -130,7 +131,7 @@ public class ImportSelectFile implements WizardStep
 					 *
 					 * This is quick and easy example, though.
 					 */
-					ImportSelectFile.this.tempFile = File.createTempFile("temp", ".csv");
+					ImportSelectFile.this.tempFile = Files.createTempFile("temp", ".csv").toFile();
 					return new FileOutputStream(ImportSelectFile.this.tempFile);
 				}
 				catch (final IOException e)
