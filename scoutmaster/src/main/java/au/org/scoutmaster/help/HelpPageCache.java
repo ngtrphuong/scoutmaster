@@ -1,5 +1,7 @@
 package au.org.scoutmaster.help;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
@@ -43,7 +45,7 @@ public class HelpPageCache
 					final String url = getHelpPageURL(helpId);
 					try
 					{
-						final URL oracle = new URL(url);
+						final URL oracle = Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
 						final URLConnection yc = oracle.openConnection();
 						in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
 						final Markdown4jProcessor processor = new Markdown4jProcessor();
